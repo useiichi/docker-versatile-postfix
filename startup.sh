@@ -57,13 +57,15 @@ then
     then
       USER=`echo "$ARG" | cut -d":" -f1`
       echo "    >> adding user: $USER"
-      useradd -s /bin/bash $USER
+      #useradd -s /bin/bash $USER
+      useradd -s /bin/bash -g vmail $USER
       echo "$ARG" | chpasswd
       if [ ! -d /var/spool/mail/$USER ]
       then
         mkdir /var/spool/mail/$USER
       fi
-      chown -R $USER:mail /var/spool/mail/$USER
+      #chown -R $USER:mail /var/spool/mail/$USER
+          chown -R $USER:vmail /var/spool/mail/$USER
       chmod -R a=rwx /var/spool/mail/$USER
       chmod -R o=- /var/spool/mail/$USER
     fi
@@ -135,4 +137,20 @@ service postfix start
 echo ">> printing the logs"
 touch /var/log/mail.log /var/log/mail.err /var/log/mail.warn
 chmod a+rw /var/log/mail.*
-tail -F /var/log/mail.*
+#tail -F /var/log/mail.*
+
+
+
+
+
+# Certificates
+export CERTNAME=`hostname -f | sed 's/\./-/g'`
+cp /certs/$CERTNAME.key /etc/ssl/private/dovecot.key
+cp /certs/$CERTNAME.pem /etc/ssl/certs/dovecot.pem
+
+#chown -R vmail:vmail /var/vmail
+mkdir /var/mail/home
+chown -R vmail:vmail /var/mail/home
+chmod -R 777 /var/mail/home
+#chmod -R 777 /var/mail
+dovecot -F

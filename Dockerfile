@@ -17,7 +17,13 @@ RUN apt-get update; apt-get install -y \
     opendkim \
     mailutils \
     opendkim-tools \
-    sasl2-bin
+    sasl2-bin \
+    supervisor \
+    dovecot-core \
+    dovecot-imapd \
+    dovecot-pop3d \
+    dovecot-lmtpd \
+    dovecot-sieve
 
 ## Configure Postfix
 
@@ -58,8 +64,39 @@ RUN sed -i 's/^SOCKET=/#SOCKET=/g' /etc/default/opendkim; \
 
 ## FINISHED
 
+
+
+
+
+
+RUN groupadd -r vmail && useradd -r -g vmail vmail
+
+RUN rm -rf /etc/dovecot
+ADD dovecot /etc/dovecot
+
+RUN sievec /etc/dovecot/sieve-before/
+RUN sievec /etc/dovecot/sieve-after/
+
+VOLUME ["/var/vmail"]
+#VOLUME ["/etc/dovecot/passwd"]
+
+
+
+
+
+
+
 # Postfix Ports
 EXPOSE 25
+
+# SASL
+EXPOSE 12345
+# IMAP
+EXPOSE 143
+# IMAPS
+EXPOSE 993
+# LMTP
+EXPOSE 24
 
 # Add startup script
 ADD startup.sh /opt/startup.sh
