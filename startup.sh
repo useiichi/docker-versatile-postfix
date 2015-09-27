@@ -41,38 +41,26 @@ echo ">> setting up postfix for: $1"
 
 # add domain
 postconf -e myhostname="$1"
-postconf -e mydestination="$1"
+#postconf -e mydestination="$1"
+postconf -e mydestination="example.com"
+
+postconf -e virtual_mailbox_domains="$1"
+postconf -e 'virtual_mailbox_base = /var/vmail'
+postconf -e 'virtual_mailbox_maps = hash:/etc/postfix/vmailbox'
+postconf -e 'virtual_minimum_uid = 1000'
+postconf -e 'virtual_uid_maps = static:5000'
+postconf -e 'virtual_gid_maps = static:5000'
+
+chown -R root:root /etc/postfix/vmailbox
+chown -R vmail:vmail /var/vmail
+chmod -R g+w /var/vmail
+#postfix check <-docker-enter‚Å“ü‚Á‚ÄŠm”F
+
+postmap /etc/postfix/vmailbox
+
 echo "$1" > /etc/mailname
 echo "Domain $1" >> /etc/opendkim.conf
 
-if [ ${#@} -gt 1 ]
-then
-  echo ">> adding users..."
-
-  # all arguments but skip first argumenti
-  i=0
-  for ARG in "$@"
-  do
-    if [ $i -gt 0 ] && [ "$ARG" != "${ARG/://}" ]
-    then
-      USER=`echo "$ARG" | cut -d":" -f1`
-      echo "    >> adding user: $USER"
-      #useradd -s /bin/bash $USER
-      useradd -s /bin/bash -g vmail $USER
-      echo "$ARG" | chpasswd
-      if [ ! -d /var/spool/mail/$USER ]
-      then
-        mkdir /var/spool/mail/$USER
-      fi
-      #chown -R $USER:mail /var/spool/mail/$USER
-          chown -R $USER:vmail /var/spool/mail/$USER
-      chmod -R a=rwx /var/spool/mail/$USER
-      chmod -R o=- /var/spool/mail/$USER
-    fi
-
-    i=`expr $i + 1`
-  done
-fi
 
 # DKIM
 if [ -z ${DISABLE_DKIM+x} ]

@@ -27,9 +27,9 @@ RUN apt-get update; apt-get install -y \
 
 ## Configure Postfix
 
-RUN postconf -e smtpd_banner="\$myhostname ESMTP"; \
-    postconf -e mail_spool_directory="/var/spool/mail/"; \
-    postconf -e mailbox_command=""
+#RUN postconf -e smtpd_banner="\$myhostname ESMTP"; \
+#    postconf -e mail_spool_directory="/var/spool/mail/"; \
+#    postconf -e mailbox_command=""
 
 ## Configure Sasl2
 
@@ -69,7 +69,7 @@ RUN sed -i 's/^SOCKET=/#SOCKET=/g' /etc/default/opendkim; \
 
 
 
-RUN groupadd -r vmail && useradd -r -g vmail vmail
+RUN groupadd -g 5000 vmail && useradd -u 5000 -g vmail vmail
 
 RUN rm -rf /etc/dovecot
 ADD dovecot /etc/dovecot
@@ -105,3 +105,7 @@ RUN chmod a+x /opt/startup.sh
 # Docker startup
 ENTRYPOINT ["/opt/startup.sh"]
 CMD ["-h"]
+
+
+#docker stop postfix1; docker rm postfix1; sudo rm -rf /home/core/maildir/; docker build -t docker-versatile-postfix:1.0 .
+#docker run -d -p 25:25 -p 110:110 -p 995:995 -p 143:143 -p 993:993 -v /home/core/docker-versatile-postfix/dov_certs2:/certs   -v /home/core/maildir:/var/vmail -v /home/core/maildir:/var/mail -v /home/core/docker-versatile-postfix/dov_certs2/passwd:/etc/dovecot/passwd   -h iseisaku.com -v /home/core/docker-versatile-postfix/vmailbox:/etc/postfix/vmailbox -v /dkim:/etc/postfix/dkim/ -e 'ALIASES=postmaster:root;hostmaster:root;webmaster:root' --name postfix1 docker-versatile-postfix:1.0 iseisaku.com webmaster:oohana user1:oohana
