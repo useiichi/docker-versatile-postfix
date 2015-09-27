@@ -61,6 +61,26 @@ postmap /etc/postfix/vmailbox
 echo "$1" > /etc/mailname
 echo "Domain $1" >> /etc/opendkim.conf
 
+if [ ${#@} -gt 1 ]
+then
+  echo ">> adding users..."
+
+  # all arguments but skip first argumenti
+  i=0
+  for ARG in "$@"
+  do
+    if [ $i -gt 0 ] && [ "$ARG" != "${ARG/://}" ]
+    then
+      USER=`echo "$ARG" | cut -d":" -f1`
+      echo "    >> adding user: $USER"
+      #useradd -s /bin/bash $USER
+      useradd -s /bin/bash -g vmail $USER
+      echo "$ARG" | chpasswd
+    fi
+
+    i=`expr $i + 1`
+  done
+fi
 
 # DKIM
 if [ -z ${DISABLE_DKIM+x} ]

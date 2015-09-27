@@ -108,4 +108,4 @@ CMD ["-h"]
 
 
 #docker stop postfix1; docker rm postfix1; sudo rm -rf /home/core/maildir/; docker build -t docker-versatile-postfix:1.0 .
-#docker run -d -p 25:25 -p 110:110 -p 995:995 -p 143:143 -p 993:993 -v /home/core/docker-versatile-postfix/dov_certs2:/certs   -v /home/core/maildir:/var/vmail -v /home/core/docker-versatile-postfix/dov_certs2/passwd:/etc/dovecot/passwd   -h iseisaku.com -v /home/core/docker-versatile-postfix/vmailbox:/etc/postfix/vmailbox -v /dkim:/etc/postfix/dkim/ -e 'ALIASES=postmaster:root;hostmaster:root;webmaster:root' --name postfix1 docker-versatile-postfix:1.0 iseisaku.com
+#docker run -d -p 25:25 -p 110:110 -p 995:995 -p 143:143 -p 993:993 -v /home/core/docker-versatile-postfix/dov_certs2:/certs   -v /home/core/maildir:/var/vmail -v /home/core/docker-versatile-postfix/dov_certs2/passwd:/etc/dovecot/passwd   -h iseisaku.com -v /home/core/docker-versatile-postfix/vmailbox:/etc/postfix/vmailbox -v /dkim:/etc/postfix/dkim/ -e 'ALIASES=postmaster:root;hostmaster:root;webmaster:root' --name postfix1 docker-versatile-postfix:1.0 iseisaku.com webmaster:oohana user1:oohana
