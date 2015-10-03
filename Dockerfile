@@ -46,6 +46,10 @@ RUN postconf -e smtpd_sasl_auth_enable="yes"; \
     postconf -e smtpd_recipient_restrictions="permit_mynetworks permit_sasl_authenticated reject_unauth_destination"; \
     postconf -e smtpd_helo_restrictions="permit_sasl_authenticated, permit_mynetworks, reject_invalid_hostname, reject_unauth_pipelining, reject_non_fqdn_hostname"
 
+RUN sed -i "s/#submission inet n/submission inet n/" /etc/postfix/master.cf; \
+    sed -i "s/#  -o smtpd_sasl_auth_enable=yes/  -o smtpd_sasl_auth_enable=yes/" /etc/postfix/master.cf; \
+    sed -i "s/#  -o smtpd_client_restrictions=\$mua_client_restrictions/  -o smtpd_client_restrictions=permit_sasl_authenticated,reject/" /etc/postfix/master.cf
+
 # add user postfix to sasl group
 RUN adduser postfix sasl
 
@@ -108,4 +112,4 @@ CMD ["-h"]
 
 
 #docker stop postfix1; docker rm postfix1; sudo rm -rf /home/core/maildir/; docker build -t docker-versatile-postfix:1.0 .
-#docker run -d -p 25:25 -p 110:110 -p 995:995 -p 143:143 -p 993:993 -v /home/core/docker-versatile-postfix/dov_certs2:/certs   -v /home/core/maildir:/var/vmail -v /home/core/docker-versatile-postfix/dov_certs2/passwd:/etc/dovecot/passwd   -h iseisaku.com -v /home/core/docker-versatile-postfix/vmailbox:/etc/postfix/vmailbox -v /dkim:/etc/postfix/dkim/ -e 'ALIASES=postmaster:root;hostmaster:root;webmaster:root' --name postfix1 docker-versatile-postfix:1.0 iseisaku.com webmaster:oohana user1:oohana
+#docker run -d -p 25:25 -p 587:587 -p 110:110 -p 995:995 -p 143:143 -p 993:993 -v /home/core/docker-versatile-postfix/dov_certs2:/certs   -v /home/core/maildir:/var/vmail -v /home/core/docker-versatile-postfix/dov_certs2/passwd:/etc/dovecot/passwd   -h iseisaku.com -v /home/core/docker-versatile-postfix/vmailbox:/etc/postfix/vmailbox -v /dkim:/etc/postfix/dkim/ -e 'ALIASES=postmaster:root;hostmaster:root;webmaster:root' --name postfix1 docker-versatile-postfix:1.0 iseisaku.com webmaster:oohana user1:oohana
