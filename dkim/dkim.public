@@ -1,0 +1,2 @@
+mail._domainkey	IN	TXT	( "v=DKIM1; k=rsa; "
+	  "p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCeZ6raJF+IOHaFTRtX6z6XSqNG9761TR45jVzAmU5SqzjL9mHhzenXp6I7PGOWmBZwuXPbQxD7xp6leTkIbx5FsjRBBwxAluq7qA9Fk/0zU1MZt+37XqPvfMAIQZUVWf3+YeHqIhTD+vFovXtofIbkPSKYycS+N0BZ8muUopCjUwIDAQAB" )  ; ----- DKIM key mail for iseisaku.com
