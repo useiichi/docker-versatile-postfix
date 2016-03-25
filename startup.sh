@@ -56,7 +56,8 @@ chown -R vmail:vmail /var/vmail
 chmod -R g+w /var/vmail
 #postfix check <-docker-enterÇ≈ì¸Ç¡ÇƒämîF
 
-postmap /etc/postfix/vmailbox
+#Å´â∫ÇÃÇŸÇ§Ç…à⁄ìÆ
+#postmap /etc/postfix/vmailbox
 
 echo "$1" > /etc/mailname
 echo "Domain $1" >> /etc/opendkim.conf
@@ -86,19 +87,19 @@ fi
 if [ -z ${DISABLE_DKIM+x} ]
 then
   echo ">> enable DKIM support"
-  
+
   if [ -z ${DKIM_CANONICALIZATION+x} ]
   then
     DKIM_CANONICALIZATION="simple"
   fi
-  
+
   echo "Canonicalization $DKIM_CANONICALIZATION" >> /etc/opendkim.conf
-  
+
   postconf -e milter_default_action="accept"
   postconf -e milter_protocol="2"
   postconf -e smtpd_milters="inet:localhost:8891"
   postconf -e non_smtpd_milters="inet:localhost:8891"
-  
+
   # add dkim if necessary
   if [ ! -f /etc/postfix/dkim/dkim.key ]
   then
@@ -137,6 +138,9 @@ if [ -z ${DISABLE_DKIM+x} ]
 then
   service opendkim start
 fi
+
+#Å´è„ÇÃÇŸÇ§Ç©ÇÁà⁄ìÆ
+postmap /etc/postfix/vmailbox
 
 service saslauthd start
 service postfix start
