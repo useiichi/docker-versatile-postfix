@@ -156,9 +156,11 @@ chmod a+rw /var/log/mail.*
 
 
 # Certificates
-export CERTNAME=`hostname -f | sed 's/\./-/g'`
-cp /certs/$CERTNAME.key /etc/ssl/private/dovecot.key
-cp /certs/$CERTNAME.pem /etc/ssl/certs/dovecot.pem
+# export CERTNAME=`hostname -f | sed 's/\./-/g'`
+# cp /certs/$CERTNAME.key /etc/ssl/private/dovecot.key
+# cp /certs/$CERTNAME.pem /etc/ssl/certs/dovecot.pem
+cp /certs/dovecot.key /etc/ssl/private/dovecot.key
+cp /certs/dovecot.pem /etc/ssl/certs/dovecot.pem
 
 #chown -R vmail:vmail /var/vmail
 mkdir /var/mail/home
