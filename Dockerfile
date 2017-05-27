@@ -46,7 +46,7 @@ RUN postconf -e smtpd_sasl_auth_enable="yes"; \
     postconf -e smtpd_recipient_restrictions="permit_mynetworks permit_sasl_authenticated reject_unauth_destination"; \
     postconf -e smtpd_helo_restrictions="permit_sasl_authenticated, permit_mynetworks, reject_invalid_hostname, reject_unauth_pipelining, reject_non_fqdn_hostname"
 
-RUN sed -i "s/#submission inet n/submission inet n/" /etc/postfix/master.cf; \
+RUN sed -i "s/#submission inet n/submission inet n       -       -       -       -       smtpd\n20000 inet n/" /etc/postfix/master.cf; \ 
     sed -i "s/#  -o smtpd_sasl_auth_enable=yes/  -o smtpd_sasl_auth_enable=yes/" /etc/postfix/master.cf; \
     sed -i "s/#  -o smtpd_client_restrictions=\$mua_client_restrictions/  -o smtpd_client_restrictions=permit_sasl_authenticated,reject/" /etc/postfix/master.cf
 
