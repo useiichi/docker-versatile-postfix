@@ -51,6 +51,15 @@ postconf -e 'virtual_minimum_uid = 1000'
 postconf -e 'virtual_uid_maps = static:5000'
 postconf -e 'virtual_gid_maps = static:5000'
 
+saslpassword=`cat /etc/postfix/sasl_passwd`
+
+postconf -e relayhost="[smtp.sendgrid.net]:2525"
+postconf -e smtp_tls_security_level="encrypt"
+postconf -e smtp_sasl_auth_enable="yes"
+postconf -e smtp_sasl_password_maps="static:$saslpassword"
+postconf -e header_size_limit="4096000"
+postconf -e smtp_sasl_security_options="noanonymous"
+
 chown -R root:root /etc/postfix/vmailbox
 chown -R vmail:vmail /var/vmail
 chmod -R g+w /var/vmail
