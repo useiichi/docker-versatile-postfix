@@ -1,5 +1,4 @@
-FROM ubuntu:14.04
-MAINTAINER MarvAmBass
+FROM debian:stretch
 
 ## Install Postfix.
 
@@ -13,6 +12,7 @@ RUN debconf-set-selections preseed.txt
 
 # install
 RUN apt-get update; apt-get install -y \
+    rsyslog \
     postfix \
     opendkim \
     mailutils \
